@@ -51,6 +51,20 @@ esac
 
 case "$package" in
 	
+	build_netbsd_src_*)
+		:
+	;;
+	
+	netbsd_src_*)
+		depends build_paxctl
+		build_needs paxctl
+	;;
+	
+esac
+
+
+case "$package" in
+	
 	build_netbsd_src_patch)
 		
 		copy_subset="compatibility $variant/usr.bin/patch"
@@ -291,7 +305,7 @@ _libertine_compile_netbsd_src_internal()
 					$compiler $cCompilerFlags -std=gnu89 -I"$(libertine_public_packagePath)"/compatibility $sourceFiles -o "$outputBinFolderPath"/patch
 		
 					if $shouldStrip ; then
-						libertine_public_installAndStripBinariesIn bin patch
+						libertine_public_installAndStripBinaryIn bin patch
 					fi
 		
 				popd
@@ -321,7 +335,7 @@ _libertine_compile_netbsd_src_internal()
 						$sourceFiles -o "$outputBinFolderPath"/byacc
 					
 					if $shouldStrip ; then
-						libertine_public_installAndStripBinariesIn bin byacc
+						libertine_public_installAndStripBinaryIn bin byacc
 					fi
 					
 				popd
@@ -414,7 +428,7 @@ _libertine_compile_netbsd_src_internal()
 						-o "$outputBinFolderPath"/m4
 							
 					if $shouldStrip ; then
-						libertine_public_installAndStripBinariesIn bin m4
+						libertine_public_installAndStripBinaryIn bin m4
 					fi
 					
 				popd
@@ -446,7 +460,7 @@ _libertine_compile_netbsd_src_internal()
 						csplit.c -o "$outputBinFolderPath"/csplit
 		
 					if $shouldStrip ; then
-						libertine_public_installAndStripBinariesIn bin csplit
+						libertine_public_installAndStripBinaryIn bin csplit
 					fi
 					
 				popd
@@ -469,7 +483,7 @@ _libertine_compile_netbsd_src_internal()
 						join.c -o "$outputBinFolderPath"/join
 		
 					if $shouldStrip ; then
-						libertine_public_installAndStripBinariesIn bin join
+						libertine_public_installAndStripBinaryIn bin join
 					fi
 					
 				popd
@@ -501,7 +515,7 @@ _libertine_compile_netbsd_src_internal()
 						fmt.c head.c -o "$outputBinFolderPath"/fmt
 		
 					if $shouldStrip ; then
-						libertine_public_installAndStripBinariesIn bin fmt
+						libertine_public_installAndStripBinaryIn bin fmt
 					fi
 					
 				popd
