@@ -129,7 +129,7 @@ case "$package" in
 		
 		build_provides csplit
 		
-		depends build_musl_cross_make_host
+		depends build_musl_cross_make_build
 		build_needs "$libertine_build"-cc
 		libertine_compile_build_netbsd_src_csplit()
 		{
@@ -144,7 +144,7 @@ case "$package" in
 		
 		build_provides fmt
 		
-		depends build_musl_cross_make_host
+		depends build_musl_cross_make_build
 		build_needs "$libertine_build"-cc
 		libertine_compile_build_netbsd_src_fmt()
 		{
