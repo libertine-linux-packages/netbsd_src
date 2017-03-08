@@ -1,3 +1,4 @@
 [submodule "upstream"]
 	path = upstream
 	url = https://github.com/jsonn/src.git
+	branch = netbsd_7_0
