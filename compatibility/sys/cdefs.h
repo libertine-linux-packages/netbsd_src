@@ -16,6 +16,8 @@
 
 # define __dead __attribute__((__noreturn__))
 
+# define __unused __attribute__((__unused__))
+
 # ifdef __cplusplus
 
 #  define __BEGIN_EXTERN_C extern "C" {

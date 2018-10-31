@@ -4,6 +4,10 @@
 
 #include "other/progname.h"
 
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif
+
 #include <errno.h>
 
 extern const char * getprogname(void)

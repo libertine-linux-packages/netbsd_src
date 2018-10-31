@@ -5,14 +5,27 @@
 variant=upstream
 
 
-if [ "$package" != 'build_netbsd_src_patch' ]; then
-	depends build_busybox
-fi
-
+case "$package" in
+	
+	build_netbsd_src_patch|build_netbsd_src_sleep)
+		:
+	;;
+	
+	*)
+		depends build_busybox
+	;;
+	
+esac
 
 case "$package" in
 	
 	*_patch)
+		
+		# Does not depend on   build_busybox   as a working patch is needed to build busybox (see above)
+		build_needs mkdir cp awk sed
+	;;
+	
+	*_sleep)
 		
 		# Does not depend on   build_busybox   as a working patch is needed to build busybox (see above)
 		build_needs mkdir cp awk sed
@@ -43,8 +56,6 @@ case "$package" in
 	*_join)
 	
 		build_needs mkdir cp
-		
-	;;
 	
 esac
 
@@ -75,6 +86,20 @@ case "$package" in
 		libertine_compile_build_netbsd_src_patch()
 		{
 			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" '' false patch
+		}
+		
+	;;
+	
+	build_netbsd_src_sleep)
+		
+		copy_subset="compatibility $variant/bin/sleep"
+		
+		build_provides sleep
+		
+		build_needs cc
+		libertine_compile_build_netbsd_src_sleep()
+		{
+			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" '' false sleep
 		}
 		
 	;;
@@ -167,6 +192,22 @@ case "$package" in
 			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true patch
 		}
 		
+	;;
+
+	netbsd_src_sleep)
+	
+		copy_subset="compatibility $variant/bin/sleep"
+	
+		depends build_ccache
+		build_needs ccache
+
+		depends build_musl_cross_make_host
+		build_needs "$libertine_host"-cc "$libertine_host"-strip
+		libertine_compile_netbsd_src_patch()
+		{
+			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true sleep
+		}
+	
 	;;
 	
 	netbsd_src_join)
@@ -308,6 +349,28 @@ _libertine_compile_netbsd_src_internal()
 						libertine_public_installAndStripBinaryIn bin patch
 					fi
 		
+				popd
+			;;
+	
+			sleep)
+		
+				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
+				cp -a bin/sleep/. "$(libertine_public_inputMakePath)"
+			
+				pushd "$(libertine_public_inputMakePath)"
+					
+					_libertine_compile_netbsd_src_modifyStdlibToAddProgname sleep.c
+					
+					
+					$compiler $cCompilerFlags -std=gnu89  -DSIGINFO=SIGPWR \
+						-I"$(libertine_public_packagePath)"/compatibility \
+						"$(libertine_public_packagePath)"/compatibility/other/progname.c \
+						sleep.c -o "$outputBinFolderPath"/sleep
+		
+					if $shouldStrip ; then
+						libertine_public_installAndStripBinaryIn bin sleep
+					fi
+	
 				popd
 			;;
 			
