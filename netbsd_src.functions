@@ -360,9 +360,10 @@ _libertine_compile_netbsd_src_internal()
 				pushd "$(libertine_public_inputMakePath)"
 					
 					_libertine_compile_netbsd_src_modifyStdlibToAddProgname sleep.c
-					
-					
-					$compiler $cCompilerFlags -std=gnu89  -DSIGINFO=SIGPWR \
+
+					$compiler $cCompilerFlags -std=gnu89 \
+						'-D__unused=__attribute__((__unused__))' \
+						-DSIGINFO=SIGPWR \
 						-I"$(libertine_public_packagePath)"/compatibility \
 						"$(libertine_public_packagePath)"/compatibility/other/progname.c \
 						sleep.c -o "$outputBinFolderPath"/sleep
