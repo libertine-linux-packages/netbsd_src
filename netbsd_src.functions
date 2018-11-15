@@ -75,48 +75,6 @@ esac
 
 
 case "$package" in
-	
-	build_netbsd_src_patch)
-		
-		copy_subset="compatibility $variant/usr.bin/patch"
-		
-		build_provides patch
-		
-		build_needs cc
-		libertine_compile_build_netbsd_src_patch()
-		{
-			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" '' false patch
-		}
-		
-	;;
-	
-	build_netbsd_src_sleep)
-		
-		copy_subset="compatibility $variant/bin/sleep"
-		
-		build_provides sleep
-		
-		build_needs cc
-		libertine_compile_build_netbsd_src_sleep()
-		{
-			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" '' false sleep
-		}
-		
-	;;
-	
-	build_netbsd_src_join)
-		
-		copy_subset="compatibility $variant/usr.bin/join"
-		
-		build_provides join
-		
-		build_needs cc
-		libertine_compile_build_netbsd_src_join()
-		{
-			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" "$(libertine_public_buildCCompilerFlags)" false join
-		}
-		
-	;;
 		
 	build_netbsd_src_byacc)
 		
@@ -130,20 +88,6 @@ case "$package" in
 		libertine_compile_build_netbsd_src_byacc()
 		{
 			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" '' false byacc
-		}
-		
-	;;
-		
-	build_netbsd_src_m4)
-		
-		copy_subset="compatibility $variant/usr.bin/m4"
-		
-		build_provides m4
-		
-		build_needs cc
-		libertine_compile_build_netbsd_src_m4()
-		{
-			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" '' false m4
 		}
 		
 	;;
@@ -178,50 +122,90 @@ case "$package" in
 		
 	;;
 	
-	netbsd_src_patch)
-		
-		copy_subset="compatibility $variant/usr.bin/patch"
-		
-		depends build_ccache
-		build_needs ccache
-
-		depends build_musl_cross_make_host
-		build_needs "$libertine_host"-cc "$libertine_host"-strip
-		libertine_compile_netbsd_src_patch()
-		{
-			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true patch
-		}
-		
-	;;
-
-	netbsd_src_sleep)
-	
-		copy_subset="compatibility $variant/bin/sleep"
-	
-		depends build_ccache
-		build_needs ccache
-
-		depends build_musl_cross_make_host
-		build_needs "$libertine_host"-cc "$libertine_host"-strip
-		libertine_compile_netbsd_src_patch()
-		{
-			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true sleep
-		}
-	
-	;;
-	
-	netbsd_src_join)
+	build_netbsd_src_join)
 		
 		copy_subset="compatibility $variant/usr.bin/join"
 		
-		depends build_ccache
-		build_needs ccache
+		build_provides join
 		
-		depends build_musl_cross_make_host
-		build_needs "$libertine_host"-cc "$libertine_host"-strip
-		libertine_compile_netbsd_src_join()
+		build_needs cc
+		libertine_compile_build_netbsd_src_join()
 		{
-			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true join
+			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" "$(libertine_public_buildCCompilerFlags)" false join
+		}
+		
+	;;
+		
+	build_netbsd_src_m4)
+		
+		copy_subset="compatibility $variant/usr.bin/m4"
+		
+		build_provides m4
+		
+		build_needs cc
+		libertine_compile_build_netbsd_src_m4()
+		{
+			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" '' false m4
+		}
+		
+	;;
+	
+	build_netbsd_src_musl_fts)
+		
+		# fts.c
+		copy_subset="$variant/lib/libc/gen $variant/include"
+		
+		build_needs cp
+		libertine_compile_build_netbsd_src_musl_fts()
+		{
+			pushd "$(libertine_public_sourcePath)"
+				
+				cp lib/libc/gen/fts.c "$(libertine_public_outputBuildSysrootPath)"
+				cp include/fts.h "$(libertine_public_outputBuildSysrootPath)"
+				
+			popd
+		}
+	;;
+	
+	build_netbsd_src_patch)
+		
+		copy_subset="compatibility $variant/usr.bin/patch"
+		
+		build_provides patch
+		
+		build_needs cc
+		libertine_compile_build_netbsd_src_patch()
+		{
+			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" '' false patch
+		}
+		
+	;;
+	
+	build_netbsd_src_pax)
+	
+		copy_subset="compatibility $variant/bin/pax $variant/sbin/mknod"
+		
+		build_provides pax
+		
+		depends build_musl_cross_make_build
+		build_needs "$libertine_build"-cc
+		libertine_compile_build_netbsd_src_pax()
+		{
+			_libertine_compile_netbsd_src_internal "$libertine_build"-cc "$(libertine_public_outputBuildSysrootPath)" "$(libertine_public_buildCCompilerFlags)" false pax
+		}
+		
+	;;
+	
+	build_netbsd_src_sleep)
+		
+		copy_subset="compatibility $variant/bin/sleep"
+		
+		build_provides sleep
+		
+		build_needs cc
+		libertine_compile_build_netbsd_src_sleep()
+		{
+			_libertine_compile_netbsd_src_internal cc "$(libertine_public_outputBuildSysrootPath)" '' false sleep
 		}
 		
 	;;
@@ -239,22 +223,6 @@ case "$package" in
 		{
 			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true yacc
 		}
-	;;
-		
-	netbsd_src_m4)
-		
-		copy_subset="compatibility $variant/usr.bin/m4"
-		
-		depends build_ccache
-		build_needs ccache
-
-		depends build_musl_cross_make_host
-		build_needs "$libertine_host"-cc "$libertine_host"-strip
-		libertine_compile_build_netbsd_src_m4()
-		{
-			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true m4
-		}
-		
 	;;
 	
 	netbsd_src_csplit)
@@ -287,6 +255,86 @@ case "$package" in
 			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true fmt
 		}
 		
+	;;
+	
+	netbsd_src_join)
+		
+		copy_subset="compatibility $variant/usr.bin/join"
+		
+		depends build_ccache
+		build_needs ccache
+		
+		depends build_musl_cross_make_host
+		build_needs "$libertine_host"-cc "$libertine_host"-strip
+		libertine_compile_netbsd_src_join()
+		{
+			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true join
+		}
+		
+	;;
+		
+	netbsd_src_m4)
+		
+		copy_subset="compatibility $variant/usr.bin/m4"
+		
+		depends build_ccache
+		build_needs ccache
+
+		depends build_musl_cross_make_host
+		build_needs "$libertine_host"-cc "$libertine_host"-strip
+		libertine_compile_build_netbsd_src_m4()
+		{
+			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true m4
+		}
+		
+	;;
+	
+	netbsd_src_patch)
+		
+		copy_subset="compatibility $variant/usr.bin/patch"
+		
+		depends build_ccache
+		build_needs ccache
+
+		depends build_musl_cross_make_host
+		build_needs "$libertine_host"-cc "$libertine_host"-strip
+		libertine_compile_netbsd_src_patch()
+		{
+			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true patch
+		}
+		
+	;;
+	
+	netbsd_src_pax)
+	
+		copy_subset="compatibility $variant/bin/pax $variant/sbin/mknod"
+		
+		depends build_ccache
+		build_needs ccache
+
+		depends build_musl_cross_make_host
+		build_needs "$libertine_host"-cc "$libertine_host"-strip
+		libertine_compile_netbsd_src_pax()
+		{
+			_libertine_compile_netbsd_src_internal "$libertine_build"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true pax
+		}
+		
+	;;
+
+	netbsd_src_sleep)
+	
+		copy_subset="compatibility $variant/bin/sleep"
+	
+		depends build_ccache
+		build_needs ccache
+
+		depends build_musl_cross_make_host
+		build_needs "$libertine_host"-cc "$libertine_host"-strip
+		libertine_compile_netbsd_src_sleep()
+		{
+			_libertine_compile_netbsd_src_internal "$libertine_host"-cc "$(libertine_public_outputHostSysrootPath)" "$(libertine_public_hostCCompilerFlags)" true sleep
+		}
+	
 	;;
 	
 esac
@@ -331,49 +379,6 @@ _libertine_compile_netbsd_src_internal()
 	pushd "$(libertine_public_sourcePath)"
 		
 		case "$program" in
-		
-			patch)
-			
-				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
-				cp -a usr.bin/patch/. "$(libertine_public_inputMakePath)"
-				
-				pushd "$(libertine_public_inputMakePath)"
-	
-					local sourceFiles="$(awk '$1 ~/SRCS=/ { for(i=2; i<NF; i++) printf "%s",$i OFS; if(NF) printf "%s",$NF; printf ORS}' Makefile)"
-					
-					_libertine_compile_netbsd_src_removePosixismForDNamlen backupfile.c
-					
-					$compiler $cCompilerFlags -std=gnu89 -I"$(libertine_public_packagePath)"/compatibility $sourceFiles -o "$outputBinFolderPath"/patch
-		
-					if $shouldStrip ; then
-						libertine_public_installAndStripBinaryIn bin patch
-					fi
-		
-				popd
-			;;
-	
-			sleep)
-		
-				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
-				cp -a bin/sleep/. "$(libertine_public_inputMakePath)"
-			
-				pushd "$(libertine_public_inputMakePath)"
-					
-					_libertine_compile_netbsd_src_modifyStdlibToAddProgname sleep.c
-
-					$compiler $cCompilerFlags -std=gnu89 \
-						'-D__unused=__attribute__((__unused__))' \
-						-DSIGINFO=SIGPWR \
-						-I"$(libertine_public_packagePath)"/compatibility \
-						"$(libertine_public_packagePath)"/compatibility/other/progname.c \
-						sleep.c -o "$outputBinFolderPath"/sleep
-		
-					if $shouldStrip ; then
-						libertine_public_installAndStripBinaryIn bin sleep
-					fi
-	
-				popd
-			;;
 			
 			byacc)
 				
@@ -404,6 +409,61 @@ _libertine_compile_netbsd_src_internal()
 					
 				popd
 				
+			;;
+			
+			fmt)
+				
+				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
+				
+				pushd "$(libertine_public_inputMakePath)"
+					
+					sed -e 's/SIZE_T_MAX/SIZE_MAX/g' -e 's/#include <string.h>/#include <string.h>\n#include <stdint.h>/g' "$(libertine_public_sourcePath)"/usr.bin/fmt/fmt.c >fmt.c
+					cp "$(libertine_public_sourcePath)"/usr.bin/fmt/buffer.h ./
+					
+					set +f
+						cp -a "$(libertine_public_sourcePath)"/usr.bin/mail/* ./
+					set -f
+					
+					_libertine_compile_netbsd_src_modifyStdlibToAddProgname fmt.c
+					
+					printf '' >vis.h
+					
+					$compiler $cCompilerFlags -std=gnu89 \
+						-DFMT_PROG \
+						-I. \
+						-I"$(libertine_public_packagePath)"/compatibility \
+						"$(libertine_public_packagePath)"/compatibility/other/progname.c \
+						fmt.c head.c -o "$outputBinFolderPath"/fmt
+		
+					if $shouldStrip ; then
+						libertine_public_installAndStripBinaryIn bin fmt
+					fi
+					
+				popd
+			
+			;;
+			
+			join)
+				
+				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
+				
+				pushd "$(libertine_public_inputMakePath)"
+				
+					cp "$(libertine_public_sourcePath)"/usr.bin/join/join.c ./
+					
+					_libertine_compile_netbsd_src_modifyStdlibToAddProgname join.c
+				
+					$compiler $cCompilerFlags -std=gnu89 \
+						-I"$(libertine_public_packagePath)"/compatibility \
+						"$(libertine_public_packagePath)"/compatibility/other/progname.c \
+						join.c -o "$outputBinFolderPath"/join
+		
+					if $shouldStrip ; then
+						libertine_public_installAndStripBinaryIn bin join
+					fi
+					
+				popd
+			
 			;;
 			
 			m4)
@@ -497,6 +557,77 @@ _libertine_compile_netbsd_src_internal()
 					
 				popd
 			;;
+		
+			patch)
+			
+				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
+				cp -a usr.bin/patch/. "$(libertine_public_inputMakePath)"
+				
+				pushd "$(libertine_public_inputMakePath)"
+	
+					local sourceFiles="$(awk '$1 ~/SRCS=/ { for(i=2; i<NF; i++) printf "%s",$i OFS; if(NF) printf "%s",$NF; printf ORS}' Makefile)"
+					
+					_libertine_compile_netbsd_src_removePosixismForDNamlen backupfile.c
+					
+					$compiler $cCompilerFlags -std=gnu89 -I"$(libertine_public_packagePath)"/compatibility $sourceFiles -o "$outputBinFolderPath"/patch
+		
+					if $shouldStrip ; then
+						libertine_public_installAndStripBinaryIn bin patch
+					fi
+		
+				popd
+			;;
+			
+			pax)
+	
+				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
+				cp -a bin/pax/. "$(libertine_public_inputMakePath)"
+				
+				# -DSMALL (see below) prevents the use of 'mtree'; otherwise the following is needed:-
+				#
+				# cp usr.sbin/mknod/getid.c "$(libertine_public_inputMakePath)"
+				# cp usr.sbin/mknod/spec.c "$(libertine_public_inputMakePath)"
+				# cp usr.sbin/mknod/misc.c "$(libertine_public_inputMakePath)"
+				# cp usr.sbin/mknod/mtree.h "$(libertine_public_inputMakePath)"
+				# Additional mtree includes: mtree.h
+				# Additional mtree sources: getid.c spec.c misc.c
+				
+				cp sbin/mknod/pack_dev.c "$(libertine_public_inputMakePath)"
+				cp sbin/mknod/pack_dev.h "$(libertine_public_inputMakePath)"
+
+				pushd "$(libertine_public_inputMakePath)"
+
+					$compiler $cCompilerFlags -std=gnu89 -I"$(libertine_public_packagePath)"/compatibility -DSMALL ar_io.c ar_subs.c buf_subs.c file_subs.c ftree.c gen_subs.c getoldopt.c options.c pat_rep.c pax.c sel_subs.c tables.c tar.c tty_subs.c pack_dev.c cpio.c -o "$outputBinFolderPath"/pax
+	
+					if $shouldStrip ; then
+						libertine_public_installAndStripBinaryIn bin pax
+					fi
+				
+				popd
+			;;
+	
+			sleep)
+		
+				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
+				cp -a bin/sleep/. "$(libertine_public_inputMakePath)"
+			
+				pushd "$(libertine_public_inputMakePath)"
+					
+					_libertine_compile_netbsd_src_modifyStdlibToAddProgname sleep.c
+
+					$compiler $cCompilerFlags -std=gnu89 \
+						'-D__unused=__attribute__((__unused__))' \
+						-DSIGINFO=SIGPWR \
+						-I"$(libertine_public_packagePath)"/compatibility \
+						"$(libertine_public_packagePath)"/compatibility/other/progname.c \
+						sleep.c -o "$outputBinFolderPath"/sleep
+		
+					if $shouldStrip ; then
+						libertine_public_installAndStripBinaryIn bin sleep
+					fi
+	
+				popd
+			;;
 			
 			csplit)
 				
@@ -525,61 +656,6 @@ _libertine_compile_netbsd_src_internal()
 		
 					if $shouldStrip ; then
 						libertine_public_installAndStripBinaryIn bin csplit
-					fi
-					
-				popd
-			
-			;;
-			
-			join)
-				
-				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
-				
-				pushd "$(libertine_public_inputMakePath)"
-				
-					cp "$(libertine_public_sourcePath)"/usr.bin/join/join.c ./
-					
-					_libertine_compile_netbsd_src_modifyStdlibToAddProgname join.c
-				
-					$compiler $cCompilerFlags -std=gnu89 \
-						-I"$(libertine_public_packagePath)"/compatibility \
-						"$(libertine_public_packagePath)"/compatibility/other/progname.c \
-						join.c -o "$outputBinFolderPath"/join
-		
-					if $shouldStrip ; then
-						libertine_public_installAndStripBinaryIn bin join
-					fi
-					
-				popd
-			
-			;;
-			
-			fmt)
-				
-				mkdir -m 0755 -p "$(libertine_public_inputMakePath)"
-				
-				pushd "$(libertine_public_inputMakePath)"
-					
-					sed -e 's/SIZE_T_MAX/SIZE_MAX/g' -e 's/#include <string.h>/#include <string.h>\n#include <stdint.h>/g' "$(libertine_public_sourcePath)"/usr.bin/fmt/fmt.c >fmt.c
-					cp "$(libertine_public_sourcePath)"/usr.bin/fmt/buffer.h ./
-					
-					set +f
-						cp -a "$(libertine_public_sourcePath)"/usr.bin/mail/* ./
-					set -f
-					
-					_libertine_compile_netbsd_src_modifyStdlibToAddProgname fmt.c
-					
-					printf '' >vis.h
-					
-					$compiler $cCompilerFlags -std=gnu89 \
-						-DFMT_PROG \
-						-I. \
-						-I"$(libertine_public_packagePath)"/compatibility \
-						"$(libertine_public_packagePath)"/compatibility/other/progname.c \
-						fmt.c head.c -o "$outputBinFolderPath"/fmt
-		
-					if $shouldStrip ; then
-						libertine_public_installAndStripBinaryIn bin fmt
 					fi
 					
 				popd
