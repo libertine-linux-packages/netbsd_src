@@ -2,3 +2,7 @@
 	path = upstream
 	url = https://github.com/libertine-linux-forks/netbsd_src.git
 	branch = netbsd_7_0
+	update = checkout
+	ignore = none
+	fetchRecurseSubmodules = true
+	shallow = true
